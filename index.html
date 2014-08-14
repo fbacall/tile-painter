@@ -45,31 +45,87 @@
 <script>
     var tileWidth = 16;
     var tileHeight = 16;
+    var img;
+    var tileData;
+    var canvas;
+    var ctx;
+    var selectedX = 0;
+    var selectedY = 0;
+    var mouseDown = false;
 
     $(document).ready(function () {
-        var canvas = document.getElementById('canvas');
-        var ctx = canvas.getContext("2d");
+        canvas = document.getElementById('canvas');
+        ctx = canvas.getContext("2d");
+
+        img = document.getElementById("tiles");
+
+        // 2D array to hold tiles
+        tileData = new Array((canvas.width / tileWidth) | 0);
+
+        for(var i = 0; i < tileData.length; i++){
+            tileData[i] = new Array((canvas.height / tileHeight) | 0);
+        }
+
+        // Initialise all tiles to [0,0]
+        for(var i = 0; i < tileData.length; i++){
+            for(var j = 0; j < tileData[i].length; j++){
+                tileData[i][j] = [0,0];
+            }
+        }
 
         $('#tiles').click(function (e) {
-            var x =  (e.pageX - $(this).offset().left) / tileWidth | 0,
-                y =  (e.pageY - $(this).offset().top) / tileHeight | 0;
-            var c = 'rect(' +
+            var x = (e.pageX - $(this).offset().left) / tileWidth | 0,
+                y = (e.pageY - $(this).offset().top) / tileHeight | 0;
+            var selectedTile = $('#selected-tile');
+            selectedTile.css('clip', 'rect(' +
                     (y * tileHeight) + 'px, ' +
                     (x * tileWidth + tileWidth) + 'px, ' +
                     (y * tileHeight + tileHeight) + 'px, ' +
-                    (x * tileWidth) + 'px)';
-            $('#selected-tile').css('clip', c);
-            $('#selected-tile').css('left', '-' + (x * tileWidth) + 'px');
-            $('#selected-tile').css('top',  '-' + (y * tileHeight) + 'px');
+                    (x * tileWidth) + 'px)');
+            selectedTile.css('left', '-' + (x * tileWidth) + 'px');
+            selectedTile.css('top',  '-' + (y * tileHeight) + 'px');
 
-            console.log(c);
-            console.log("X " + x + ", Y " + y);
+            selectedX = x;
+            selectedY = y;
         });
+
+        $('#canvas').mousedown(function (e) {
+            mouseDown = true;
+            paintTiles(e);
+        });
+
+        $(window).mouseup(function (e) {
+            mouseDown = false;
+        });
+
+        $('#canvas').mousemove(function (e) {
+            if(mouseDown)
+                paintTiles(e);
+        });
+
+        draw();
     });
+
+    function paintTiles(e) {
+        var c = $('#canvas');
+        var x = (e.pageX - c.offset().left) / tileWidth | 0,
+                y = (e.pageY - c.offset().top) / tileHeight | 0;
+        tileData[x][y] = [selectedX, selectedY];
+        draw();
+    }
+
+    function draw() {
+        for(var i = 0; i < tileData.length; i++){
+            for(var j = 0; j < tileData[i].length; j++){
+                var clipX = tileData[i][j][0] * tileWidth;
+                var clipY = tileData[i][j][1] * tileHeight;
+                ctx.drawImage(img, clipX, clipY, 16, 16, i * 16, j * 16, 16, 16);
+            }
+        }
+    }
 
 </script>
 
-<h1>Tile Painter</h1>
 <div id="container">
     <div id="view">
         <canvas id="canvas" width="640" height="480"></canvas>
