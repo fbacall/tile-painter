@@ -1,0 +1,85 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Tile Painter</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+</head>
+<body>
+<style>
+    #container {
+        width: 740px;
+        height:480px;
+        margin: 0 auto;
+    }
+
+    #view {
+        border: 1px solid black;
+        float: left;
+    }
+
+    #palette {
+        margin-left: 10px;
+        float: left;
+    }
+
+    #tiles {
+        border: 1px solid black;
+    }
+
+    #selected-tile-container {
+        position: relative;
+        border: 1px solid black;
+        width: 16px;
+        height: 16px;
+    }
+
+    #selected-tile {
+        position: absolute;
+        clip: rect(0px,16px,16px,0px);
+    }
+</style>
+<script>
+    var tileWidth = 16;
+    var tileHeight = 16;
+
+    $(document).ready(function () {
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext("2d");
+
+        $('#tiles').click(function (e) {
+            var x =  (e.pageX - $(this).offset().left) / tileWidth | 0,
+                y =  (e.pageY - $(this).offset().top) / tileHeight | 0;
+            var c = 'rect(' +
+                    (y * tileHeight) + 'px, ' +
+                    (x * tileWidth + tileWidth) + 'px, ' +
+                    (y * tileHeight + tileHeight) + 'px, ' +
+                    (x * tileWidth) + 'px)';
+            $('#selected-tile').css('clip', c);
+            $('#selected-tile').css('left', '-' + (x * tileWidth) + 'px');
+            $('#selected-tile').css('top',  '-' + (y * tileHeight) + 'px');
+
+            console.log(c);
+            console.log("X " + x + ", Y " + y);
+        });
+    });
+
+</script>
+
+<h1>Tile Painter</h1>
+<div id="container">
+    <div id="view">
+        <canvas id="canvas" width="640" height="480"></canvas>
+    </div>
+    <div id="palette">
+        <img id="tiles" src="tiles.png"/>
+        <div id="selected-tile-container">
+            <img id="selected-tile" src="tiles.png"/>
+        </div>
+    </div>
+</div>
+</body>
+</html>
