@@ -7,6 +7,8 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="tileset.js"></script>
+    <script src="map.js"></script>
 </head>
 <body>
 <style>
@@ -41,6 +43,8 @@
     }
 </style>
 <script>
+    var tileSet;
+    var map;
     var tileWidth;
     var tileHeight;
     var img;
@@ -53,19 +57,18 @@
 
     $(document).ready(function () {
         $('#tiles').click(function (e) {
-            var x = (e.pageX - $(this).offset().left) / tileWidth | 0,
-                y = (e.pageY - $(this).offset().top) / tileHeight | 0;
+            var x = (e.pageX - $(this).offset().left) / tileSet.tileWidth | 0,
+                y = (e.pageY - $(this).offset().top) / tileSet.tileHeight | 0;
             var selectedTile = $('#selected-tile');
             selectedTile.css('clip', 'rect(' +
-                    (y * tileHeight) + 'px, ' +
-                    (x * tileWidth + tileWidth) + 'px, ' +
-                    (y * tileHeight + tileHeight) + 'px, ' +
-                    (x * tileWidth) + 'px)');
-            selectedTile.css('left', '-' + (x * tileWidth) + 'px');
-            selectedTile.css('top',  '-' + (y * tileHeight) + 'px');
+                    (y * tileSet.tileHeight) + 'px, ' +
+                    (x * tileSet.tileWidth + tileSet.tileWidth) + 'px, ' +
+                    (y * tileSet.tileHeight + tileSet.tileHeight) + 'px, ' +
+                    (x * tileSet.tileWidth) + 'px)');
+            selectedTile.css('left', '-' + (x * tileSet.tileWidth) + 'px');
+            selectedTile.css('top',  '-' + (y * tileSet.tileHeight) + 'px');
 
-            selectedX = x;
-            selectedY = y;
+            tileSet.selectedTile = [x,y];
         });
 
         $('#canvas').mousedown(function (e) {
@@ -98,29 +101,15 @@
         img.onload = function () {
             document.getElementById('selected-tile').src = this.src;
             $('#status').html('');
-            draw();
+
+            tileSet = new TileSet(this, parseInt($('#tile-size').val()), parseInt($('#tile-size').val()));
+            map = new Map(tileSet, (canvas.width / tileSet.tileWidth) | 0, (canvas.height / tileSet.tileHeight) | 0);
+            map.draw(ctx);
         };
 
         img.src = $('#tile-url').val();
 
         $('#status').html('Loading...');
-
-        tileWidth = parseInt($('#tile-size').val());
-        tileHeight = tileWidth;
-
-        // 2D array to hold tiles
-        tileData = new Array((canvas.width / tileWidth) | 0);
-
-        for(var i = 0; i < tileData.length; i++){
-            tileData[i] = new Array((canvas.height / tileHeight) | 0);
-        }
-
-        // Initialise all tiles to [0,0]
-        for(var i = 0; i < tileData.length; i++){
-            for(var j = 0; j < tileData[i].length; j++){
-                tileData[i][j] = [0,0];
-            }
-        }
 
         $('#selected-tile-container').css('width',tileWidth + 'px');
         $('#selected-tile-container').css('height',tileHeight + 'px');
@@ -128,20 +117,10 @@
 
     function paintTiles(e) {
         var c = $('#canvas');
-        var x = (e.pageX - c.offset().left) / tileWidth | 0,
-                y = (e.pageY - c.offset().top) / tileHeight | 0;
-        tileData[x][y] = [selectedX, selectedY];
-        draw();
-    }
-
-    function draw() {
-        for(var i = 0; i < tileData.length; i++){
-            for(var j = 0; j < tileData[i].length; j++){
-                var clipX = tileData[i][j][0] * tileWidth;
-                var clipY = tileData[i][j][1] * tileHeight;
-                ctx.drawImage(img, clipX, clipY, tileWidth, tileHeight, i * tileWidth, j * tileHeight, tileWidth, tileHeight);
-            }
-        }
+        var x = (e.pageX - c.offset().left) / tileSet.tileWidth | 0,
+            y = (e.pageY - c.offset().top) / tileSet.tileHeight | 0;
+        map.tileData[x][y] = [tileSet.selectedTile[0], tileSet.selectedTile[1]];
+        map.draw(ctx);
     }
 
 </script>
