@@ -11,9 +11,7 @@
 <body>
 <style>
     #container {
-        width: 740px;
-        height:480px;
-        margin: 0 auto;
+        overflow: auto;
     }
 
     #view {
@@ -43,8 +41,8 @@
     }
 </style>
 <script>
-    var tileWidth = 16;
-    var tileHeight = 16;
+    var tileWidth;
+    var tileHeight;
     var img;
     var tileData;
     var canvas;
@@ -54,25 +52,6 @@
     var mouseDown = false;
 
     $(document).ready(function () {
-        canvas = document.getElementById('canvas');
-        ctx = canvas.getContext("2d");
-
-        img = document.getElementById("tiles");
-
-        // 2D array to hold tiles
-        tileData = new Array((canvas.width / tileWidth) | 0);
-
-        for(var i = 0; i < tileData.length; i++){
-            tileData[i] = new Array((canvas.height / tileHeight) | 0);
-        }
-
-        // Initialise all tiles to [0,0]
-        for(var i = 0; i < tileData.length; i++){
-            for(var j = 0; j < tileData[i].length; j++){
-                tileData[i][j] = [0,0];
-            }
-        }
-
         $('#tiles').click(function (e) {
             var x = (e.pageX - $(this).offset().left) / tileWidth | 0,
                 y = (e.pageY - $(this).offset().top) / tileHeight | 0;
@@ -103,8 +82,49 @@
                 paintTiles(e);
         });
 
-        draw();
+        $('#reset').click(function () {
+            init();
+        });
+
+        init();
     });
+
+    function init() {
+        canvas = document.getElementById('canvas');
+        ctx = canvas.getContext("2d");
+
+        img = document.getElementById("tiles");
+
+        img.onload = function () {
+            document.getElementById('selected-tile').src = this.src;
+            $('#status').html('');
+            draw();
+        };
+
+        img.src = $('#tile-url').val();
+
+        $('#status').html('Loading...');
+
+        tileWidth = parseInt($('#tile-size').val());
+        tileHeight = tileWidth;
+
+        // 2D array to hold tiles
+        tileData = new Array((canvas.width / tileWidth) | 0);
+
+        for(var i = 0; i < tileData.length; i++){
+            tileData[i] = new Array((canvas.height / tileHeight) | 0);
+        }
+
+        // Initialise all tiles to [0,0]
+        for(var i = 0; i < tileData.length; i++){
+            for(var j = 0; j < tileData[i].length; j++){
+                tileData[i][j] = [0,0];
+            }
+        }
+
+        $('#selected-tile-container').css('width',tileWidth + 'px');
+        $('#selected-tile-container').css('height',tileHeight + 'px');
+    }
 
     function paintTiles(e) {
         var c = $('#canvas');
@@ -119,7 +139,7 @@
             for(var j = 0; j < tileData[i].length; j++){
                 var clipX = tileData[i][j][0] * tileWidth;
                 var clipY = tileData[i][j][1] * tileHeight;
-                ctx.drawImage(img, clipX, clipY, 16, 16, i * 16, j * 16, 16, 16);
+                ctx.drawImage(img, clipX, clipY, tileWidth, tileHeight, i * tileWidth, j * tileHeight, tileWidth, tileHeight);
             }
         }
     }
@@ -137,5 +157,10 @@
         </div>
     </div>
 </div>
+Tileset URL: <input type="text" id="tile-url" value="tiles.png"/><br/>
+Tile Size: <input type="text" id="tile-size" value="16"/><br/>
+<button id="reset">Go</button>
+<span id="status"></span>
+
 </body>
 </html>
