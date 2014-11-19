@@ -9,6 +9,7 @@ var ctx;
 var selectedX = 0;
 var selectedY = 0;
 var mouseDown = false;
+var previewCanvas, previewCtx;
 
 $(document).ready(function () {
     init();
@@ -33,7 +34,7 @@ $(document).ready(function () {
         tileSet.selectedTile = tileSet.tiles[x][y];
     });
 
-    canvas.mousedown(function (e) {
+    previewCanvas.mousedown(function (e) {
         mouseDown = true;
         paintTile(e);
     });
@@ -42,15 +43,14 @@ $(document).ready(function () {
         mouseDown = false;
     });
 
-    canvas.mousemove(function (e) {
+    previewCanvas.mousemove(function (e) {
+        clearPreview();
+        // Draw "ghost" tile
+        var x = (e.pageX - previewCanvas.offset().left) / tileSet.tileWidth | 0,
+            y = (e.pageY - previewCanvas.offset().top) / tileSet.tileHeight | 0;
+        tileSet.selectedTile.draw(previewCtx, x, y);
         if(mouseDown) {
             paintTile(e);
-        } else {
-            // Draw "ghost" tile
-            var x = (e.pageX - canvas.offset().left) / tileSet.tileWidth | 0,
-                y = (e.pageY - canvas.offset().top) / tileSet.tileHeight | 0;
-            map.draw(ctx);
-            tileSet.selectedTile.draw(ctx, x, y);
         }
     });
 
@@ -62,7 +62,8 @@ $(document).ready(function () {
 function init() {
     canvas = $('#canvas');
     ctx = canvas[0].getContext("2d");
-    console.log("INIT");
+    previewCanvas = $('#preview-canvas');
+    previewCtx = previewCanvas[0].getContext("2d");
 
     $('#status').html('Loading...');
 
@@ -75,6 +76,7 @@ function init() {
             $('#status').html('');
 
             map = new Map(tileSet, (canvas.width() / tileSet.tileWidth) | 0, (canvas.height() / tileSet.tileHeight) | 0);
+            clearPreview();
             map.draw(ctx);
         }
     });
@@ -89,4 +91,11 @@ function paintTile(e) {
         y = (e.pageY - canvas.offset().top) / tileSet.tileHeight | 0;
     map.tileData[x][y] = tileSet.selectedTile;
     map.draw(ctx);
+}
+
+function clearPreview() {
+    previewCtx.save();
+    previewCtx.setTransform(1, 0, 0, 1, 0, 0);
+    previewCtx.clearRect(0, 0, previewCanvas.width(), previewCanvas.height());
+    previewCtx.restore();
 }

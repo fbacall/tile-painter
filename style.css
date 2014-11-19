@@ -5,6 +5,7 @@
 #view {
     border: 1px solid black;
     float: left;
+    position: relative;
 }
 
 #palette {
@@ -33,4 +34,16 @@
     height: 0;
     border: 1px solid red;
     position: absolute;
+}
+
+#canvas, #preview-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    background: transparent;
+}
+
+#preview-canvas {
+    z-index: 1;
 }

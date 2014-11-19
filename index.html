@@ -7,16 +7,13 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script src="js/tile.js"></script>
-    <script src="js/tileset.js"></script>
-    <script src="js/map.js"></script>
-    <script src="js/tile_painter.js"></script>
     <link rel="stylesheet" href="style.css" type="text/css"/>
 </head>
 <body>
 
 <div id="container">
     <div id="view" style="width: 640px; height: 480px">
+        <canvas id="preview-canvas" width="640" height="480"></canvas>
         <canvas id="canvas" width="640" height="480"></canvas>
     </div>
     <div id="palette">
@@ -31,5 +28,9 @@ Tileset URL: <input type="text" id="tile-url" value="finnstiles.json"/><br/>
 <button id="reset">Go</button>
 <span id="status"></span>
 
+<script src="js/tile.js"></script>
+<script src="js/tileset.js"></script>
+<script src="js/map.js"></script>
+<script src="js/tile_painter.js"></script>
 </body>
 </html>
