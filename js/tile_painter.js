@@ -30,7 +30,7 @@ $(document).ready(function () {
         box.height(tileSet.tileHeight);
         box.css({ marginTop: (y * tileSet.tileHeight), marginLeft: (x * tileSet.tileWidth)});
 
-        tileSet.selectedTile = [x,y];
+        tileSet.selectedTile = tileSet.tiles[x][y];
     });
 
     canvas.mousedown(function (e) {
@@ -50,7 +50,7 @@ $(document).ready(function () {
             var x = (e.pageX - canvas.offset().left) / tileSet.tileWidth | 0,
                 y = (e.pageY - canvas.offset().top) / tileSet.tileHeight | 0;
             map.draw(ctx);
-            tileSet.drawTile(ctx, tileSet.selectedTile, x, y);
+            tileSet.selectedTile.draw(ctx, x, y);
         }
     });
 
@@ -62,21 +62,23 @@ $(document).ready(function () {
 function init() {
     canvas = $('#canvas');
     ctx = canvas[0].getContext("2d");
-
-    img = document.getElementById("tiles");
-
-    img.onload = function () {
-        document.getElementById('selected-tile').src = this.src;
-        $('#status').html('');
-
-        tileSet = new TileSet(this, parseInt($('#tile-size').val()), parseInt($('#tile-size').val()));
-        map = new Map(tileSet, (canvas.width() / tileSet.tileWidth) | 0, (canvas.height() / tileSet.tileHeight) | 0);
-        map.draw(ctx);
-    };
-
-    img.src = $('#tile-url').val();
+    console.log("INIT");
 
     $('#status').html('Loading...');
+
+    $.ajax({
+        url: $('#tile-url').val(),
+        success: function (data) {
+            tileSet = TileSet.load(data);
+            document.getElementById('selected-tile').src = tileSet.img.src;
+            document.getElementById('tiles').src = tileSet.img.src;
+            $('#status').html('');
+
+            map = new Map(tileSet, (canvas.width() / tileSet.tileWidth) | 0, (canvas.height() / tileSet.tileHeight) | 0);
+            map.draw(ctx);
+        }
+    });
+
 
     $('#selected-tile-container').css('width',tileWidth + 'px');
     $('#selected-tile-container').css('height',tileHeight + 'px');
@@ -85,6 +87,6 @@ function init() {
 function paintTile(e) {
     var x = (e.pageX - canvas.offset().left) / tileSet.tileWidth | 0,
         y = (e.pageY - canvas.offset().top) / tileSet.tileHeight | 0;
-    map.tileData[x][y] = [tileSet.selectedTile[0], tileSet.selectedTile[1]];
+    map.tileData[x][y] = tileSet.selectedTile;
     map.draw(ctx);
 }

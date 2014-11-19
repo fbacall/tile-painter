@@ -7,6 +7,7 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="js/tile.js"></script>
     <script src="js/tileset.js"></script>
     <script src="js/map.js"></script>
     <script src="js/tile_painter.js"></script>
@@ -20,13 +21,13 @@
     </div>
     <div id="palette">
         <div id="selection-box"></div>
-        <img id="tiles" src="tiles2.png"/>
+        <img id="tiles"/>
         <div id="selected-tile-container">
-            <img id="selected-tile" src="tiles2.png"/>
+            <img id="selected-tile"/>
         </div>
     </div>
 </div>
-Tileset URL: <input type="text" id="tile-url" value="tiles2.png"/><br/>
+Tileset URL: <input type="text" id="tile-url" value="finnstiles.json"/><br/>
 Tile Size: <input type="text" id="tile-size" value="16"/><br/>
 <button id="reset">Go</button>
 <span id="status"></span>

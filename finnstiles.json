@@ -1,8 +1,8 @@
 {
     "title": "Finn's Tileset",
     "url": "tiles.png",
-    "tile-size": 16,
-    "tile-data":
+    "tileSize": 16,
+    "tileData":
     [
         [
             {

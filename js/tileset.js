@@ -1,18 +1,32 @@
-function TileSet(img, width, height) {
+function TileSet(img, width, height, tileData) {
     this.img = img;
     this.tileWidth = width;
     this.tileHeight = height;
 
-    this.selectedTile = [0,0]
+    this.tiles = [];
+    for(var i = 0; i < tileData.length; i++) {
+        this.tiles[i] = [];
+        for(var j = 0; j < tileData[i].length; j++) {
+            this.tiles[i].push(new Tile(this, i, j, tileData[i][j].name, tileData[i][j].passable));
+        }
+    }
+
+    this.selectedTile = this.tiles[0][0];
 }
 
-TileSet.prototype.drawTile = function (ctx, tile, x, y) {
-    ctx.drawImage(this.img, tile[0] * this.tileWidth, tile[1] * this.tileHeight,
+TileSet.prototype.drawTile = function (ctx, tilePosX, tilePosY, x, y) {
+    ctx.drawImage(this.img, tilePosX * this.tileWidth, tilePosY * this.tileHeight,
                   this.tileWidth, this.tileHeight,
                   x * this.tileWidth, y * this.tileHeight,
                   this.tileWidth, this.tileHeight);
 };
 
-TileSet.prototype.selectTile = function (x, y) {
+TileSet.prototype.selectTile = function (tile) {
+    this.selectedTile = tile;
+};
 
+TileSet.load = function (data) {
+    var img = new Image();
+    img.src = data.url;
+    return new TileSet(img, data.tileSize, data.tileSize, data.tileData);
 };
