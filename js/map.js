@@ -16,9 +16,13 @@ function Map(tileSet, width, height) {
     }
 }
 
-Map.prototype.draw = function (ctx) {
-    for(var i = 0; i < this.tileData.length; i++){
-        for(var j = 0; j < this.tileData[i].length; j++){
+Map.prototype.draw = function (ctx, regionStartX, regionStartY, regionEndX, regionEndY) {
+    regionStartX = regionStartX || 0;
+    regionStartY = regionStartY || 0;
+    regionEndX = regionEndX || this.tileData.length;
+    regionEndY = regionEndY || this.tileData[0].length;
+    for(var i = regionStartX; i < regionEndX; i++){
+        for(var j = regionStartY; j < regionEndY; j++){
             this.tileSet.drawTile(ctx, this.tileData[i][j], i, j);
         }
     }

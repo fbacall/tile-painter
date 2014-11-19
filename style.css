@@ -1,0 +1,36 @@
+#container {
+    overflow: auto;
+}
+
+#view {
+    border: 1px solid black;
+    float: left;
+}
+
+#palette {
+    margin-left: 10px;
+    float: left;
+}
+
+#tiles {
+    border: 1px solid black;
+}
+
+#selected-tile-container {
+    position: relative;
+    border: 1px solid black;
+    width: 16px;
+    height: 16px;
+}
+
+#selected-tile {
+    position: absolute;
+    clip: rect(0px,16px,16px,0px);
+}
+
+#selection-box {
+    width: 0;
+    height: 0;
+    border: 1px solid red;
+    position: absolute;
+}

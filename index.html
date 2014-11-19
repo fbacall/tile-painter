@@ -7,136 +7,26 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script src="tileset.js"></script>
-    <script src="map.js"></script>
+    <script src="js/tileset.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/tile_painter.js"></script>
+    <link rel="stylesheet" href="style.css" type="text/css"/>
 </head>
 <body>
-<style>
-    #container {
-        overflow: auto;
-    }
-
-    #view {
-        border: 1px solid black;
-        float: left;
-    }
-
-    #palette {
-        margin-left: 10px;
-        float: left;
-    }
-
-    #tiles {
-        border: 1px solid black;
-    }
-
-    #selected-tile-container {
-        position: relative;
-        border: 1px solid black;
-        width: 16px;
-        height: 16px;
-    }
-
-    #selected-tile {
-        position: absolute;
-        clip: rect(0px,16px,16px,0px);
-    }
-</style>
-<script>
-    var tileSet;
-    var map;
-    var tileWidth;
-    var tileHeight;
-    var img;
-    var tileData;
-    var canvas;
-    var ctx;
-    var selectedX = 0;
-    var selectedY = 0;
-    var mouseDown = false;
-
-    $(document).ready(function () {
-        $('#tiles').click(function (e) {
-            var x = (e.pageX - $(this).offset().left) / tileSet.tileWidth | 0,
-                y = (e.pageY - $(this).offset().top) / tileSet.tileHeight | 0;
-            var selectedTile = $('#selected-tile');
-            selectedTile.css('clip', 'rect(' +
-                    (y * tileSet.tileHeight) + 'px, ' +
-                    (x * tileSet.tileWidth + tileSet.tileWidth) + 'px, ' +
-                    (y * tileSet.tileHeight + tileSet.tileHeight) + 'px, ' +
-                    (x * tileSet.tileWidth) + 'px)');
-            selectedTile.css('left', '-' + (x * tileSet.tileWidth) + 'px');
-            selectedTile.css('top',  '-' + (y * tileSet.tileHeight) + 'px');
-
-            tileSet.selectedTile = [x,y];
-        });
-
-        $('#canvas').mousedown(function (e) {
-            mouseDown = true;
-            paintTiles(e);
-        });
-
-        $(window).mouseup(function (e) {
-            mouseDown = false;
-        });
-
-        $('#canvas').mousemove(function (e) {
-            if(mouseDown)
-                paintTiles(e);
-        });
-
-        $('#reset').click(function () {
-            init();
-        });
-
-        init();
-    });
-
-    function init() {
-        canvas = document.getElementById('canvas');
-        ctx = canvas.getContext("2d");
-
-        img = document.getElementById("tiles");
-
-        img.onload = function () {
-            document.getElementById('selected-tile').src = this.src;
-            $('#status').html('');
-
-            tileSet = new TileSet(this, parseInt($('#tile-size').val()), parseInt($('#tile-size').val()));
-            map = new Map(tileSet, (canvas.width / tileSet.tileWidth) | 0, (canvas.height / tileSet.tileHeight) | 0);
-            map.draw(ctx);
-        };
-
-        img.src = $('#tile-url').val();
-
-        $('#status').html('Loading...');
-
-        $('#selected-tile-container').css('width',tileWidth + 'px');
-        $('#selected-tile-container').css('height',tileHeight + 'px');
-    }
-
-    function paintTiles(e) {
-        var c = $('#canvas');
-        var x = (e.pageX - c.offset().left) / tileSet.tileWidth | 0,
-            y = (e.pageY - c.offset().top) / tileSet.tileHeight | 0;
-        map.tileData[x][y] = [tileSet.selectedTile[0], tileSet.selectedTile[1]];
-        map.draw(ctx);
-    }
-
-</script>
 
 <div id="container">
     <div id="view">
         <canvas id="canvas" width="640" height="480"></canvas>
     </div>
     <div id="palette">
-        <img id="tiles" src="tiles.png"/>
+        <div id="selection-box"></div>
+        <img id="tiles" src="tiles2.png"/>
         <div id="selected-tile-container">
-            <img id="selected-tile" src="tiles.png"/>
+            <img id="selected-tile" src="tiles2.png"/>
         </div>
     </div>
 </div>
-Tileset URL: <input type="text" id="tile-url" value="tiles.png"/><br/>
+Tileset URL: <input type="text" id="tile-url" value="tiles2.png"/><br/>
 Tile Size: <input type="text" id="tile-size" value="16"/><br/>
 <button id="reset">Go</button>
 <span id="status"></span>

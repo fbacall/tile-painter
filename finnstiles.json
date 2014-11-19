@@ -1,0 +1,120 @@
+{
+    "title": "Finn's Tileset",
+    "url": "tiles.png",
+    "tile-size": 16,
+    "tile-data":
+    [
+        [
+            {
+                "name": "grass",
+                "passable": true
+            },
+            {
+                "name": "sand",
+                "passable": true
+            },
+            {
+
+                "name": "sea",
+                "passable": false
+            },
+            {
+                "name": "rock",
+                "passable": false
+            },
+            {
+                "name": "forest",
+                "passable": true
+            }
+        ],
+        [
+            {
+                "name": "unused1",
+                "passable": true
+            },
+            {
+                "name": "house",
+                "passable": true
+            },
+            {
+                "name": "unused2",
+                "passable": true
+            },
+            {
+                "name": "road-NS",
+                "passable": true
+            },
+            {
+                "name": "road-EW",
+                "passable": true
+            }
+        ],
+        [
+            {
+                "name": "unused3",
+                "passable": true
+            },
+            {
+                "name": "unused4",
+                "passable": true
+            },
+            {
+                "name": "unused5",
+                "passable": true
+            },
+            {
+                "name": "road-SE",
+                "passable": true
+            },
+            {
+                "name": "road-NE",
+                "passable": true
+            }
+        ],
+        [
+            {
+                "name": "unused6",
+                "passable": true
+            },
+            {
+                "name": "unused7",
+                "passable": true
+            },
+            {
+                "name": "unused8",
+                "passable": true
+            },
+            {
+                "name": "road-SW",
+                "passable": true
+            },
+            {
+                "name": "road-NW",
+                "passable": true
+            }
+        ],
+        [
+            {
+                "name": "unused9",
+                "passable": true
+            },
+            {
+                "name": "unused10",
+                "passable": true
+            },
+            {
+                "name": "unused11",
+                "passable": false
+            },
+            {
+                "name": "unused12",
+                "passable": false
+            },
+            {
+                "name": "unused13",
+                "passable": true
+            }
+        ]
+    ]
+}
+
